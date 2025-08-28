@@ -4,7 +4,6 @@ go 1.23.1
 
 require (
 	github.com/google/generative-ai-go v0.18.0
-	github.com/joho/godotenv v1.5.1
 	google.golang.org/api v0.186.0
 )
 

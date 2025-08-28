@@ -1,20 +1,22 @@
 package main
 
 import (
-    "bufio"       // Para leitura eficiente de entrada do usuário
-    "context"     // Para gerenciamento de contextos e timeouts
-    "fmt"         // Para entrada e saída formatada
-    "log"         // Para logging de erros
-    "os"          // Para acesso a variáveis de ambiente e STDIN
-    "strings"     // Para manipulação de strings
-    "time"        // Para controle de timeouts
+	"bufio"   // Para leitura eficiente de entrada do usuário
+	"context" // Para gerenciamento de contextos e timeouts
+	"fmt"     // Para entrada e saída formatada
+	"log"     // Para logging de erros
+	"os"      // Para acesso a variáveis de ambiente e STDIN
+	"strings" // Para manipulação de strings
+	"time"    // Para controle de timeouts
+
+	// Para carregar variáveis de ambiente do arquivo .env
+    "GoIAChat/config"
+	//"github.com/joho/godotenv"
 
     // SDK oficial do Google para Generative AI
-    "github.com/google/generative-ai-go/genai"
-    // Para carregar variáveis de ambiente do arquivo .env
-    "github.com/joho/godotenv"
-    // Para opções de configuração do cliente Google API
-    "google.golang.org/api/option"
+	"github.com/google/generative-ai-go/genai"
+	// Para opções de configuração do cliente Google API
+	"google.golang.org/api/option"
 )
 
 // Estrutura para armazenar o cliente AI e configurações relacionadas
@@ -26,7 +28,12 @@ type AIClient struct {
 
 func main() {
     // Carrega variáveis de ambiente do arquivo .env
-    godotenv.Load()
+    //godotenv.Load()
+    err := config.LoadEnv()
+	if err != nil {
+        log.Fatalf("Erro ao carregar .env: %v", err)
+    }
+
     // Cria um contexto base para a aplicação
     ctx := context.Background()
     
@@ -53,7 +60,7 @@ func main() {
 // setupClient configura e retorna o cliente da API Gemini
 func setupClient(ctx context.Context) *genai.Client {
     // Cria um novo cliente com a chave API das variáveis de ambiente
-    client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("API_KEY")))
+    client, err := genai.NewClient(ctx, option.WithAPIKey(config.GetAPIKey()))
     // Verifica se houve erro na criação do cliente
     if err != nil {
         log.Fatal("❌ Erro ao criar cliente:", err)
